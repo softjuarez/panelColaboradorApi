@@ -32,8 +32,8 @@
                 <div class="p-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-700">Detalle de Notificación</h2>
                 </div>
-                <div id="notification-detail" class="px-6 py-4">
-                    
+                <div id="notification-detail" class="px-6 py-4 relative">
+
                 </div>
             </div>
         </div>
@@ -161,11 +161,20 @@
                 
                 notificationDetail.innerHTML = `
                     <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-gray-800">${notification.titulo || 'Sin título'}</h3>
-                            <span class="text-sm text-gray-500">${formatDate(notification.created_at)}</span>
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-gray-800">${notification.titulo || 'Sin título'}</h3>
+                                <span class="text-sm text-gray-500">${formatDate(notification.created_at)}</span>
+                            </div>
+                            <button id="maximizeNotificationBtn" onclick="maximizeNotificationDetail(${notification.id})"
+                                    class="ml-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200 flex-shrink-0"
+                                    title="Maximizar para lectura">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
                         </div>
-                        
+
                         <div class="flex items-center">
                             <span class="px-2 text-xs rounded-full bg-blue-100 text-blue-800">
                                 Noticia
@@ -175,7 +184,7 @@
 
                         <iframe id="miIframe" class="w-full h-96 border-0"></iframe>
                     </div>
-                `;                
+                `;
 
                 const iframe = document.getElementById('miIframe');
                 iframe.srcdoc = notification.contenido;
@@ -218,10 +227,111 @@
                 }
             }
 
+            // Make maximize functions globally accessible
+            window.maximizeNotificationDetail = function(notificationId) {
+                console.log('maximizeNotificationDetail called with notificationId:', notificationId);
+                console.log('notifications:', notifications);
+                const notification = notifications.find(n => n.id === notificationId);
+                console.log('found notification:', notification);
+                if (!notification) return;
+
+            // Create fullscreen overlay
+            const fullscreenOverlay = document.createElement('div');
+            fullscreenOverlay.id = 'notificationFullscreenOverlay';
+            fullscreenOverlay.className = 'fixed inset-0 bg-white z-[60] flex flex-col transition-opacity duration-300 opacity-0';
+
+            fullscreenOverlay.innerHTML = `
+                <div class="flex-shrink-0 border-b border-gray-200 p-4 bg-white">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <h2 class="text-xl font-bold text-gray-800">Modo Lectura</h2>
+                            <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Noticia</span>
+                        </div>
+                        <button id="minimizeNotificationBtn" onclick="minimizeNotificationDetail()"
+                                class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                title="Minimizar">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M16 8l4 4-4 4M8 16l-4-4 4-4" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-8">
+                        <div class="mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">${notification.titulo || 'Sin título'}</h1>
+                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 pb-6 border-b border-gray-200">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Publicado: ${formatDate(notification.created_at)}
+                                </span>
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    Autor: ${notification.creador ? notification.creador.name : 'Sistema'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="prose prose-lg max-w-none text-gray-800 leading-relaxed">
+                            <iframe id="fullscreenIframe" class="w-full min-h-[600px] border-0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(fullscreenOverlay);
+
+            // Set iframe content
+            const fullscreenIframe = document.getElementById('fullscreenIframe');
+            fullscreenIframe.srcdoc = notification.contenido;
+
+            // Trigger animation
+            setTimeout(() => {
+                fullscreenOverlay.classList.remove('opacity-0');
+                fullscreenOverlay.classList.add('opacity-100');
+            }, 10);
+
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+
+            // Add keyboard support
+            document.addEventListener('keydown', handleNotificationFullscreenKeydown);
+            };
+
+            window.minimizeNotificationDetail = function() {
+                console.log('minimizeNotificationDetail called');
+                const overlay = document.getElementById('notificationFullscreenOverlay');
+            if (overlay) {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+
+                setTimeout(() => {
+                    overlay.remove();
+                    document.body.style.overflow = '';
+                    document.removeEventListener('keydown', handleNotificationFullscreenKeydown);
+                }, 300);
+            }
+            };
+
+            function handleNotificationFullscreenKeydown(event) {
+                if (event.key === 'Escape') {
+                    window.minimizeNotificationDetail();
+                }
+            }
+
             loadNotifications();
+
+            // Verify functions are attached
+            console.log('Bandeja functions attached:', {
+                maximizeNotificationDetail: typeof window.maximizeNotificationDetail,
+                minimizeNotificationDetail: typeof window.minimizeNotificationDetail
+            });
         });
 
-        async function actualizarEstado() 
+        async function actualizarEstado()
         {
             try {
                 let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

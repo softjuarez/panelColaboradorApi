@@ -38,7 +38,7 @@
                     </ul>
                 </div>
                 
-                <div id="newsDetail" class="w-2/3 p-6 overflow-y-auto">
+                <div id="newsDetail" class="w-2/3 p-6 overflow-y-auto relative">
                     <div class="text-center py-10 text-gray-400">
                         Selecciona una noticia para ver su contenido
                     </div>
@@ -85,8 +85,17 @@
             if (news) {
                 newsDetail.innerHTML = `
                     <div class="mb-6">
-                        <h3 class="text-2xl font-bold">${news.titulo}</h3>
-                        <div class="flex justify-between items-center text-sm text-gray-600">
+                        <div class="flex justify-between items-start">
+                            <h3 class="text-2xl font-bold flex-1">${news.titulo}</h3>
+                            <button id="maximizeNewsBtn" onclick="maximizeNewsDetail(${newsId})"
+                                    class="ml-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200 flex-shrink-0"
+                                    title="Maximizar para lectura">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-gray-600 mt-2">
                             <span>Publicado: ${news.created}</span>
                             <span>Autor: ${news.creador.name}</span>
                         </div>
@@ -108,7 +117,103 @@
             }
         }
 
-        async function updateNotificationStatus(id) 
+        window.maximizeNewsDetail = function(newsId) {
+            console.log('maximizeNewsDetail called with newsId:', newsId);
+            console.log('newsData:', newsData);
+            const news = newsData.find(item => item.id === newsId);
+            console.log('found news:', news);
+            if (!news) return;
+
+            // Create fullscreen overlay
+            const fullscreenOverlay = document.createElement('div');
+            fullscreenOverlay.id = 'newsFullscreenOverlay';
+            fullscreenOverlay.className = 'fixed inset-0 bg-white z-[60] flex flex-col transition-opacity duration-300 opacity-0';
+
+            fullscreenOverlay.innerHTML = `
+                <div class="flex-shrink-0 border-b border-gray-200 p-4 bg-white">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <h2 class="text-xl font-bold text-gray-800">Modo Lectura</h2>
+                            <span class="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Noticia</span>
+                        </div>
+                        <button id="minimizeNewsBtn" onclick="minimizeNewsDetail()"
+                                class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                title="Minimizar">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M16 8l4 4-4 4M8 16l-4-4 4-4" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-8">
+                        <div class="mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">${news.titulo}</h1>
+                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 pb-6 border-b border-gray-200">
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Publicado: ${news.created}
+                                </span>
+                                <span class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    Autor: ${news.creador.name}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="prose prose-lg max-w-none text-gray-800 leading-relaxed">
+                            ${news.contenido}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(fullscreenOverlay);
+
+            // Trigger animation
+            setTimeout(() => {
+                fullscreenOverlay.classList.remove('opacity-0');
+                fullscreenOverlay.classList.add('opacity-100');
+            }, 10);
+
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+
+            // Add keyboard support
+            document.addEventListener('keydown', handleFullscreenKeydown);
+        };
+
+        window.minimizeNewsDetail = function() {
+            console.log('minimizeNewsDetail called');
+            const overlay = document.getElementById('newsFullscreenOverlay');
+            if (overlay) {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+
+                setTimeout(() => {
+                    overlay.remove();
+                    document.body.style.overflow = '';
+                    document.removeEventListener('keydown', handleFullscreenKeydown);
+                }, 300);
+            }
+        };
+
+        function handleFullscreenKeydown(event) {
+            if (event.key === 'Escape') {
+                window.minimizeNewsDetail();
+            }
+        }
+
+        // Verify functions are attached
+        console.log('Dashboard functions attached:', {
+            maximizeNewsDetail: typeof window.maximizeNewsDetail,
+            minimizeNewsDetail: typeof window.minimizeNewsDetail
+        });
+
+        async function updateNotificationStatus(id)
         {
             try {
                 let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
