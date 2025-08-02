@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dte:GTDocumento xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="0.1" xsi:schemaLocation="http://www.sat.gob.gt/dte/fel/0.2.0">
+	<dte:SAT ClaseDocumento="dte">
+		<dte:DTE ID="DatosCertificados">
+			<dte:DatosEmision ID="DatosEmision">
+				<dte:DatosGenerales CodigoMoneda="GTQ" FechaHoraEmision="2024-07-19T00:00:00.000-06:00" Tipo="FACT"/>
+				<dte:Emisor AfiliacionIVA="GEN" CodigoEstablecimiento="1" NITEmisor="102676348" NombreComercial="INSIGNE" NombreEmisor="ADMINISTRADORA DE INSIGNE, S.A.">
+					<dte:DireccionEmisor>
+						<dte:Direccion>0 AVENIDA 0-11 ZONA 1 LOCAL A</dte:Direccion>
+						<dte:CodigoPostal>20022</dte:CodigoPostal>
+						<dte:Municipio>EL PROGRESO</dte:Municipio>
+						<dte:Departamento>JUTIAPA</dte:Departamento>
+						<dte:Pais>GT</dte:Pais>
+					</dte:DireccionEmisor>
+				</dte:Emisor>
+				<dte:Receptor CorreoReceptor="facturasfel.cenfar@gmail.com" IDReceptor="77308719" NombreReceptor="UNIVERSIDAD DA VINCI DE GUATEMALA">
+					<dte:DireccionReceptor>
+						<dte:Direccion>EL PROGRESO JUTIAPA                                                                                                                                   </dte:Direccion>
+						<dte:CodigoPostal>22002</dte:CodigoPostal>
+						<dte:Municipio>EL PROGRESO</dte:Municipio>
+						<dte:Departamento>JUTIAPA</dte:Departamento>
+						<dte:Pais>GT</dte:Pais>
+					</dte:DireccionReceptor>
+				</dte:Receptor>
+				<dte:Frases>
+					<dte:Frase CodigoEscenario="1" TipoFrase="1"/>
+					<dte:Frase CodigoEscenario="1" TipoFrase="2"/>
+					<dte:Frase CodigoEscenario="9" TipoFrase="4"/>
+				</dte:Frases>
+				<dte:Items>
+					<dte:Item BienOServicio="S" NumeroLinea="1">
+						<dte:Cantidad>1</dte:Cantidad>
+						<dte:UnidadMedida>CAJ</dte:UnidadMedida>
+						<dte:Descripcion>Servicios tipo A del mes de junio</dte:Descripcion>
+						<dte:PrecioUnitario>999.00</dte:PrecioUnitario>
+						<dte:Precio>999.00</dte:Precio>
+						<dte:Descuento>0</dte:Descuento>
+						<dte:Impuestos>
+							<dte:Impuesto>
+								<dte:NombreCorto>IVA</dte:NombreCorto>
+								<dte:CodigoUnidadGravable>1</dte:CodigoUnidadGravable>
+								<dte:MontoGravable>891.96</dte:MontoGravable>
+								<dte:MontoImpuesto>107.04</dte:MontoImpuesto>
+							</dte:Impuesto>
+						</dte:Impuestos>
+						<dte:Total>999.00</dte:Total>
+					</dte:Item>
+					<dte:Item BienOServicio="S" NumeroLinea="2">
+						<dte:Cantidad>1</dte:Cantidad>
+						<dte:UnidadMedida>UNI</dte:UnidadMedida>
+						<dte:Descripcion> Servicios Tipo B del mes de junio</dte:Descripcion>
+						<dte:PrecioUnitario>400.00</dte:PrecioUnitario>
+						<dte:Precio>400.00</dte:Precio>
+						<dte:Descuento>0</dte:Descuento>
+						<dte:Impuestos>
+							<dte:Impuesto>
+								<dte:NombreCorto>IVA</dte:NombreCorto>
+								<dte:CodigoUnidadGravable>1</dte:CodigoUnidadGravable>
+								<dte:MontoGravable>357.14</dte:MontoGravable>
+								<dte:MontoImpuesto>42.86</dte:MontoImpuesto>
+							</dte:Impuesto>
+						</dte:Impuestos>
+						<dte:Total>400.00</dte:Total>
+					</dte:Item>
+				</dte:Items>
+				<dte:Totales>
+					<dte:TotalImpuestos>
+						<dte:TotalImpuesto NombreCorto="IVA" TotalMontoImpuesto="149.90"/>
+					</dte:TotalImpuestos>
+					<dte:GranTotal>1399.00</dte:GranTotal>
+				</dte:Totales>
+			</dte:DatosEmision>
+			<dte:Certificacion>
+				<dte:NITCertificador>12521337</dte:NITCertificador>
+				<dte:NombreCertificador>INFILE, S.A.</dte:NombreCertificador>
+				<dte:NumeroAutorizacion Numero="3116597257" Serie="5825AE3A">5877353B-B9A2-1133-9A3D-847B5BB13543</dte:NumeroAutorizacion>
+				<dte:FechaHoraCertificacion>2022-05-19T15:53:38-06:00</dte:FechaHoraCertificacion>
+			</dte:Certificacion>
+		</dte:DTE>
+		<dte:Adenda>
+			<dias_credito>0</dias_credito>
+			<establecimiento>SEDE CENTRAL 1</establecimiento>
+			<forma_pago>CO</forma_pago>
+			<nota_pedido>P. 210789</nota_pedido>
+			<no_interno>VF-187284</no_interno>
+			<observaciones> 0 </observaciones>
+			<vendedor>7</vendedor>
+		</dte:Adenda>
+	</dte:SAT>
+</dte:GTDocumento>
